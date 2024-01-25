@@ -1,5 +1,6 @@
 package com.example.sqch09ex1.model;
 
+import com.example.sqch09ex1.services.LoggedUserManagementService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -7,18 +8,26 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 public class LoginProcessor {
 
+    private final LoggedUserManagementService loggedUserManagementService;
+
     private String username;
     private String password;
+
+    public LoginProcessor(LoggedUserManagementService loggedUserManagementService) {
+        this.loggedUserManagementService = loggedUserManagementService;
+    }
 
     public boolean login() {
         String username = this.getUsername();
         String password = this.getPassword();
 
+        boolean loginResult = false;
         if ("artem".equals(username) && "12345".equals(password)) {
-            return true;
-        } else {
-            return false;
+            loginResult = true;
+            loggedUserManagementService.setUsername(username);
         }
+
+        return loginResult;
     }
 
     public String getUsername() {
