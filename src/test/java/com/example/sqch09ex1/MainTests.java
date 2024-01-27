@@ -4,6 +4,7 @@ import com.example.sqch09ex1.controllers.LoginController;
 import com.example.sqch09ex1.controllers.MainController;
 import com.example.sqch09ex1.model.LoginProcessor;
 import com.example.sqch09ex1.services.LoggedUserManagementService;
+import com.example.sqch09ex1.services.LoginCountService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,9 @@ class MainTests {
 
 	@Mock
 	private LoggedUserManagementService loggedUserManagementService;
+
+	@Mock
+	private LoginCountService loginCountService;
 
 	@InjectMocks
 	private LoginController loginController;
@@ -70,6 +74,17 @@ class MainTests {
 
 		assertEquals("redirect:/", result);
 		verify(loggedUserManagementService, atLeastOnce()).setUsername(null);
+	}
+
+	@Test
+	public void mainControllerLoginCountTest() {
+		given(loggedUserManagementService.getUsername()).willReturn("artem");
+		given(loginCountService.getCount()).willReturn(1);
+
+		String result = mainController.home(null, model);
+
+		assertEquals("main.html", result);
+		verify(model).addAttribute("loginCount", 1);
 	}
 
 }
